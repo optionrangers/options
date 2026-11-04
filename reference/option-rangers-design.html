@@ -1,0 +1,756 @@
+<title>Option Rangers</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Option Rangers — risk-first options market research and education. No profit guarantees. Trade se pehle, research zaroori hai.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: sticky glass topbar, one red hero with a payoff-diagram card, then bordered section shells on a quiet ground. */
+:root{
+  --red-900:#6B0F1D; --red-800:#8F1729; --red-700:#A91E30; --red-600:#C51F32; --red-500:#E23744;
+  --red-soft:#FFF5F6; --red-tint:#FFE4E8; --red-line:#F5D6DA;
+
+  --bg:#FFFFFF; --bg-2:#FFFFFF; --surface:#FFFFFF; --surface-2:#FAFAFB;
+  --fg:#15181E; --ink:#20242B; --ink-2:#3F4652; --muted:#667085; --faint:#8B94A3;
+  --line:#F4E3E6; --line-soft:#EEF0F2; --glass:rgba(255,255,255,.88);
+
+  --teal:#0E9E86; --teal-ink:#127A62; --teal-soft:#E8F8F3;
+  --violet:#6D5BD0; --violet-soft:#F1EEFF;
+  --amber:#C98A1E; --amber-ink:#8A6116; --amber-soft:#FFF7E8;
+
+  --shadow-sm:0 2px 8px rgba(23,16,20,.05),0 1px 2px rgba(23,16,20,.04);
+  --shadow-md:0 14px 34px -16px rgba(23,16,20,.24);
+  --shadow-red:0 14px 34px -14px rgba(197,31,50,.45);
+
+  --font-display:'Quicksand',system-ui,sans-serif;
+  --font-body:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+  --font-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bg)}
+h1,h2,h3,h4{font-family:var(--font-display);color:var(--fg);font-weight:700;letter-spacing:-.035em;line-height:1.15;text-wrap:balance;margin:0}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:var(--red-700)}
+::selection{background:var(--red-tint)}
+:focus-visible{outline:2px solid var(--red-500);outline-offset:2px;border-radius:6px}
+[hidden]{display:none!important}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Topbar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--glass);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--line-soft)}
+.topinner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-display);font-weight:700;font-size:15.5px;color:var(--fg);letter-spacing:-.03em;cursor:pointer}
+.mark{width:40px;height:40px;flex:0 0 40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(140deg,#E23744,#8F1729);color:#fff;font-size:15px;box-shadow:0 8px 18px -6px rgba(197,31,50,.55),inset 0 1px 0 rgba(255,255,255,.28)}
+.brand small{display:block;font-size:9px;letter-spacing:.17em;color:var(--faint);margin-top:2px}
+.nav{display:flex;align-items:center;gap:2px}
+.nav button{font-family:var(--font-display);padding:8px 12px;border-radius:10px;font-weight:700;font-size:13.5px;color:var(--muted);transition:background .18s,color .18s}
+.nav button:hover{background:var(--red-soft);color:var(--red-700)}
+.nav button.active{background:var(--red-soft);color:var(--red-700)}
+.nav button.client{margin-left:8px;border:1px solid var(--red-line);color:var(--red-700)}
+.nav button.client.active{background:linear-gradient(135deg,#C51F32,#8F1729);color:#fff;border-color:transparent}
+.menu-toggle{display:none;font-family:var(--font-display);border:1px solid var(--line);border-radius:10px;padding:8px 13px;font-weight:700;font-size:13px;color:var(--red-700)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:12px 19px;font-family:var(--font-display);font-weight:700;font-size:14.5px;background:linear-gradient(135deg,#C51F32,#8F1729);color:#fff;box-shadow:var(--shadow-red);text-decoration:none;transition:transform .16s,box-shadow .16s,background .16s}
+.btn:hover{transform:translateY(-1px)}
+.btn.outline{background:var(--surface);color:var(--red-700);border:1px solid var(--red-line);box-shadow:none}
+.btn.outline:hover{background:var(--red-soft)}
+.btn.block{width:100%}
+
+/* Primitives */
+main{padding-block:0 8px}
+.view{display:grid;gap:0;grid-template-columns:minmax(0,1fr)}
+.view > *{min-width:0}
+.view[data-view]:not([data-view="home"]){gap:24px;padding-block:40px 56px}
+.kicker{display:inline-block;justify-self:start;font-family:var(--font-display);font-size:10.5px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--red-700);background:var(--red-soft);padding:6px 11px;border-radius:999px;border:1px solid var(--red-line)}
+.shell{position:relative;padding-block:56px;border-top:1px solid var(--line-soft)}
+
+.shell-head{max-width:720px;display:grid;gap:10px;margin-bottom:28px}
+.shell-head h2{font-size:clamp(24px,3.2vw,34px);letter-spacing:-.048em}
+.shell-head p{font-size:14px;color:var(--muted);max-width:62ch}
+.pill{display:inline-flex;align-items:center;border-radius:999px;padding:4px 10px;font-family:var(--font-display);font-size:11px;font-weight:700;white-space:nowrap;background:var(--surface-2);color:var(--muted);border:1px solid var(--line-soft)}
+.pill.red{background:var(--red-soft);color:var(--red-700);border-color:var(--red-line)}
+.pill.green{background:var(--teal-soft);color:var(--teal-ink);border-color:transparent}
+.foot-note{margin-top:18px;padding:14px 17px;border-radius:13px;background:var(--surface-2);border:1px solid var(--line-soft);color:var(--muted);font-size:12.5px}
+.foot-note strong{color:var(--red-700)}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding-block:48px 56px}
+.hero > *{min-width:0}
+.hero .eyebrow{font-family:var(--font-display);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red-700)}
+.hero h1{font-size:clamp(36px,5.2vw,62px);line-height:1.03;letter-spacing:-.052em;margin:14px 0 18px;color:var(--fg);max-width:14ch}
+.hero h1 span{color:var(--red-600)}
+.hero p{color:var(--muted);max-width:52ch;font-size:16.5px;margin-bottom:26px}
+.hero-actions{display:flex;gap:11px;flex-wrap:wrap}
+.hero-note{margin-top:18px;font-size:12.5px;color:var(--faint)}
+
+.payoff{background:var(--surface);color:var(--ink);border-radius:20px;padding:18px;border:1px solid var(--line-soft);box-shadow:var(--shadow-md)}
+.payoff-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.payoff-top strong{font-family:var(--font-display);font-size:15px;color:var(--fg)}
+.payoff-top .sub{font-size:11.5px;color:var(--faint)}
+.payoff svg{display:block;width:100%;height:auto;margin:14px 0 10px}
+.payoff svg text{font-family:var(--font-mono);font-size:9.5px;fill:var(--faint)}
+.payoff .axis{stroke:var(--line-soft);stroke-width:1}
+.payoff .zero{stroke:var(--faint);stroke-width:1;stroke-dasharray:3 3}
+.payoff .gain{fill:var(--teal);opacity:.16}
+.payoff .loss{fill:var(--red-600);opacity:.14}
+.payoff .line{fill:none;stroke:var(--fg);stroke-width:2.2;stroke-linejoin:round}
+.payoff .be{fill:var(--surface);stroke:var(--fg);stroke-width:2}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--surface-2);border:1px solid var(--line-soft);padding:10px 11px;border-radius:12px;min-width:0}
+.stat small{display:block;color:var(--faint);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.stat b{display:block;margin-top:3px;font-size:13.5px;color:var(--fg)}
+.stat.g b{color:var(--teal-ink)} .stat.r b{color:var(--red-700)}
+.payoff .fine{font-size:10.5px;color:var(--faint);margin-top:11px}
+
+/* Learning path */
+.learn-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.lcard{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line-soft);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow-sm);transition:transform .2s,box-shadow .2s}
+.lcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+
+.lcard .step{position:absolute;top:19px;right:20px;font-family:var(--font-mono);font-size:11px;color:var(--faint)}
+.glyph{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-family:var(--font-mono);font-weight:600;font-size:17px;background:var(--cs,var(--red-soft));color:var(--c,var(--red-600));margin-bottom:8px}
+.lcard h3{font-size:16.5px}
+.lcard p{font-size:13px;color:var(--muted);flex:1}
+.lcard .terms{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.lcard .terms span{font-family:var(--font-mono);font-size:10.5px;padding:3px 7px;border-radius:6px;background:var(--cs,var(--red-soft));color:var(--c,var(--red-700))}
+.l-violet,.l-teal,.l-amber{}
+
+/* Buyer guide */
+.guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.gcard{border:1px solid var(--line-soft);border-radius:18px;padding:22px;background:var(--surface);box-shadow:var(--shadow-sm)}
+
+
+.ghead{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.gsym{width:38px;height:38px;flex:0 0 38px;border-radius:12px;display:grid;place-items:center;font-size:20px;font-weight:800}
+.do .gsym{background:var(--teal-soft);color:var(--teal)}
+.dont .gsym{background:var(--red-soft);color:var(--red-600)}
+.glabel{font-family:var(--font-display);font-size:9.5px;letter-spacing:.16em;font-weight:700}
+.do .glabel{color:var(--teal-ink)} .dont .glabel{color:var(--red-700)}
+.ghead h3{font-size:17px}
+.gcard ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.gcard li{font-size:13px;color:var(--muted);padding-left:21px;position:relative}
+.gcard li::before{position:absolute;left:0;top:0;font-weight:900}
+.do li::before{content:"✓";color:var(--teal)}
+.dont li::before{content:"×";color:var(--red-600);font-size:16px;line-height:1.3}
+.gcard li strong{color:var(--ink);font-weight:600}
+
+/* Plans */
+.plan-grid{display:grid;grid-template-columns:repeat(2,minmax(0,380px));gap:20px;justify-content:center}
+.plan{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:28px 26px 26px;box-shadow:var(--shadow-sm)}
+.plan.featured{border:2px solid var(--red-600);box-shadow:0 20px 44px -26px rgba(197,31,50,.45)}
+.plan-badge{position:absolute;top:-12px;left:26px;background:var(--red-600);color:#fff;font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 12px;border-radius:999px}
+.plan-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.plan h3{font-size:20px}
+.plan .desc{font-size:13px;color:var(--muted);margin-top:6px}
+.price-row{display:flex;align-items:baseline;gap:6px;margin-top:20px}
+.price{font-family:var(--font-display);font-variant-numeric:tabular-nums;font-size:42px;font-weight:700;color:var(--fg);line-height:1;letter-spacing:-.04em}
+.price-per{font-size:14px;color:var(--muted)}
+.price-sub{font-size:12.5px;color:var(--faint);margin-top:6px}
+.plan hr{border:0;border-top:1px solid var(--line-soft);margin:20px 0}
+.features{list-style:none;padding:0;margin:0 0 24px;display:grid;gap:11px;font-size:13.5px;color:var(--ink-2);flex:1}
+.features li{padding-left:26px;position:relative}
+.features li::before{content:"✓";position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50%;background:var(--red-soft);color:var(--red-600);font-size:10px;font-weight:900;display:grid;place-items:center}
+.plan .btn{width:100%}
+.plan-note{font-size:11.5px;color:var(--faint);text-align:center;margin-top:10px}
+.plan-disc{font-size:12px;color:var(--muted);margin-top:20px;text-align:center}
+
+/* Process / trust */
+.process{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:s;border:1px solid var(--line-soft);border-radius:18px;overflow:hidden;background:var(--surface)}
+.pstep{padding:20px;border-right:1px solid var(--line-soft);display:grid;gap:7px;align-content:start}
+.pstep:last-child{border-right:0}
+.pstep .t{font-family:var(--font-mono);font-size:11px;color:var(--red-700)}
+.pstep h4{font-size:15px}
+.pstep p{font-size:12.5px;color:var(--muted)}
+
+/* FAQ */
+.faq{display:grid;gap:10px}
+.faq details{background:var(--surface);border:1px solid var(--line-soft);border-radius:14px;padding:0 18px}
+.faq summary{cursor:pointer;list-style:none;font-family:var(--font-display);font-weight:700;font-size:15px;color:var(--fg);padding:16px 28px 16px 0;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:0;top:13px;font-size:20px;color:var(--red-600);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{font-size:13.5px;color:var(--muted);padding-bottom:16px;max-width:72ch}
+
+/* Legal + portal */
+.legal-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.legal-tabs button{font-family:var(--font-display);font-weight:700;font-size:13px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);color:var(--muted)}
+.legal-tabs button.active{background:var(--red-soft);color:var(--red-700);border-color:var(--red-line)}
+.prose{max-width:72ch;display:grid;gap:12px;font-size:14px;color:var(--ink-2)}
+.prose h3{font-size:18px;margin-top:6px}
+.prose ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.placeholder{background:var(--amber-soft);color:var(--amber-ink);padding:1px 6px;border-radius:5px;font-family:var(--font-mono);font-size:.88em}
+
+.portal{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line-soft);border-radius:20px;padding:24px;box-shadow:var(--shadow-sm);display:grid;gap:14px;min-width:0}
+.field{display:grid;gap:6px}
+.field label{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.field input{width:100%;padding:11px 13px;border-radius:11px;border:1px solid var(--line);background:var(--surface-2)}
+.field input:focus{outline:2px solid var(--red-500);outline-offset:0;border-color:transparent}
+.msg{font-size:13px;padding:12px 14px;border-radius:12px;background:var(--red-soft);color:var(--red-700);border:1px solid var(--red-line)}
+.ticket{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line-soft);font-size:13px}
+.ticket:last-child{border-bottom:0}
+.ticket .k{color:var(--muted)}
+
+/* Footer */
+footer{border-top:1px solid var(--line-soft);background:var(--surface-2)}
+.foot{padding-block:34px;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:28px}
+.foot h4{font-size:13px;margin-bottom:10px}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.foot li button{font-size:13px;color:var(--muted);padding:0}
+.foot li button:hover{color:var(--red-700)}
+.foot p{font-size:12.5px;color:var(--muted)}
+.risk{padding-block:18px;border-top:1px solid var(--line-soft);font-size:11.5px;color:var(--faint);display:grid;gap:6px}
+
+/* Responsive */
+@media (max-width:1000px){
+  .learn-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .process{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pstep:nth-child(2){border-right:0}
+  .pstep:nth-child(-n+2){border-bottom:1px solid var(--line-soft)}
+}
+@media (max-width:860px){
+  .menu-toggle{display:inline-flex}
+  .nav{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:2px;background:var(--surface);border-bottom:1px solid var(--line-soft);padding:10px max(16px,env(safe-area-inset-right,0px)) 14px max(16px,env(safe-area-inset-left,0px));box-shadow:var(--shadow-md)}
+  .nav.open{display:flex}
+  .nav button{text-align:left;padding:11px 12px}
+  .nav button.client{margin-left:0;margin-top:6px;text-align:center}
+  .hero{grid-template-columns:1fr;gap:28px}
+  .plan-grid{grid-template-columns:minmax(0,1fr);gap:28px}
+  .guide-grid,.plan-grid,.portal{grid-template-columns:1fr}
+  .foot{grid-template-columns:1fr 1fr}
+  .foot > :first-child{grid-column:1/-1}
+}
+@media (max-width:520px){
+  .shell{padding-block:40px}
+  .hero{padding-block:32px 40px}
+  .learn-grid,.process{grid-template-columns:1fr}
+  .pstep{border-right:0;border-bottom:1px solid var(--line-soft)}
+  .pstep:last-child{border-bottom:0}
+  .stats{grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .stat{padding:9px}
+  .stat b{font-size:12px}
+}
+/* Phone layout */
+@media (max-width:600px){
+  body{font-size:15px}
+  .preview-bar{font-size:11.5px}
+  .preview-bar b{display:none}
+  .payoff svg text{font-size:12px}
+  .stats{gap:6px}
+  .stat{padding:8px}
+  .preview-bar .wrap{padding-block:6px;flex-wrap:nowrap}
+  .topinner{padding-block:10px}
+  .mark{width:36px;height:36px;flex-basis:36px;font-size:14px}
+  .brand{font-size:15px}
+  .nav button{font-size:15px;padding:13px 12px}
+  .hero{padding-block:28px 36px;gap:28px}
+  .hero h1{font-size:40px;margin:10px 0 14px}
+  .hero p{font-size:15.5px;margin-bottom:22px}
+  .hero-actions{flex-direction:column}
+  .hero-actions .btn{width:100%;padding:14px 18px}
+  .payoff{padding:14px;border-radius:16px}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stat small{font-size:8.5px;letter-spacing:.06em}
+  .stat b{font-size:12px}
+  .shell{padding-block:36px}
+  .shell-head{margin-bottom:20px}
+  .shell-head h2{font-size:26px}
+  .page-head h1{font-size:32px}
+  .view[data-view]:not([data-view="home"]){padding-block:28px 40px}
+  .check,.gcard,.panel{padding:18px}
+  .trio{gap:10px}
+  .plan{padding:24px 20px 20px}
+  .price{font-size:38px}
+  .lead{padding:20px;gap:20px}
+  .field input,.field select,.field textarea{font-size:16px;padding:12px 13px}
+  .faq summary{font-size:15px;padding:15px 28px 15px 0}
+  .legal-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+  .legal-tabs button{white-space:nowrap}
+  .kv div{flex-wrap:wrap}
+  .foot{grid-template-columns:1fr 1fr;gap:24px}
+  .foot li button{padding:4px 0;font-size:14px}
+}
+</style>
+
+<style>
+.preview-bar{background:var(--amber-soft);color:var(--amber-ink);border-bottom:1px solid var(--line-soft);font-size:12.5px}
+.preview-bar .wrap{padding-block:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.preview-bar b{font-family:var(--font-display);letter-spacing:.06em;text-transform:uppercase;font-size:10.5px;background:var(--surface);padding:2px 8px;border-radius:999px;border:1px solid var(--line)}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.check{background:var(--surface);border:1px solid var(--line-soft);border-radius:18px;padding:22px;display:grid;gap:8px;align-content:start;box-shadow:var(--shadow-sm)}
+.check .t{font-family:var(--font-mono);font-size:11px;color:var(--red-700)}
+.check h3{font-size:16.5px}
+.check p{font-size:13px;color:var(--muted)}
+
+.pill.amber{background:var(--amber-soft);color:var(--amber-ink);border-color:transparent}
+.notice{padding:16px 18px;border-radius:14px;background:var(--red-soft);border:1px solid var(--red-line);color:var(--ink-2);font-size:13.5px}
+.notice strong{display:block;color:var(--red-700);font-family:var(--font-display);margin-bottom:3px}
+.notice.amber{background:var(--amber-soft);border-color:transparent}
+.notice.amber strong{color:var(--amber-ink)}
+.list-checks{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.list-checks li{padding-left:25px;position:relative;font-size:13.5px;color:var(--ink-2)}
+.list-checks li::before{content:"";position:absolute;left:0;top:5px;width:13px;height:13px;border-radius:4px;border:1.5px solid var(--red-600)}
+.page-head{display:grid;gap:12px;max-width:760px}
+.page-head h1{font-size:clamp(30px,4.4vw,46px);letter-spacing:-.05em}
+.page-head p{font-size:15px;color:var(--muted);max-width:62ch}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.two > *{min-width:0}
+.kv{display:grid;gap:0}
+.kv div{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line-soft);font-size:13.5px}
+.kv div:last-child{border-bottom:0}
+.kv span:first-child{color:var(--muted)}
+.field select,.field textarea{width:100%;padding:11px 13px;border-radius:11px;border:1px solid var(--line);background:var(--surface-2)}
+.field textarea{min-height:120px;resize:vertical}
+.field select:focus,.field textarea:focus{outline:2px solid var(--red-500);outline-offset:0;border-color:transparent}
+@media (max-width:860px){.trio,.two{grid-template-columns:1fr}}
+
+/* New sections */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line-soft);border-radius:18px;overflow:hidden}
+.vs > div{padding:22px;min-width:0}
+.vs > div + div{border-left:1px solid var(--line-soft)}
+.vs h3{font-size:17px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.vs ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.vs li{font-size:13.5px;color:var(--ink-2);padding-left:20px;position:relative}
+.vs .tip li::before{content:"×";position:absolute;left:0;color:var(--faint);font-weight:800}
+.vs .res li::before{content:"✓";position:absolute;left:0;color:var(--red-600);font-weight:800}
+.vs .tip h3{color:var(--muted)}
+.report{border:1px solid var(--line-soft);border-radius:18px;overflow:hidden;background:var(--surface)}
+.report-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:16px 20px;border-bottom:1px solid var(--line-soft)}
+.report-head strong{font-family:var(--font-display);font-size:16px;color:var(--fg)}
+.report-body{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.report-body > div{padding:16px 20px;border-right:1px solid var(--line-soft);min-width:0}
+.report-body > div:last-child{border-right:0}
+.report-body small{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:700}
+.report-body b{display:block;margin-top:4px;font-size:14px;color:var(--fg)}
+.report-why{padding:16px 20px;border-top:1px solid var(--line-soft);font-size:13.5px;color:var(--ink-2);display:grid;gap:6px}
+.report-why span{color:var(--muted);font-size:12px}
+.tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.tcard{border:1px dashed var(--line);border-radius:18px;padding:22px;display:grid;gap:14px;align-content:space-between;background:var(--surface)}
+.tcard blockquote{margin:0;font-size:15px;line-height:1.6;color:var(--ink-2)}
+.tcard blockquote::before{content:"“";display:block;font-family:var(--font-display);font-size:40px;line-height:.6;color:var(--red-600);margin-bottom:8px}
+.tperson{display:flex;align-items:center;gap:11px}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line-soft);display:grid;place-items:center;font-family:var(--font-display);font-weight:700;color:var(--faint)}
+.tperson b{display:block;font-size:13.5px;color:var(--fg)}
+.tperson span{font-size:12px;color:var(--faint)}
+.lead{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center;border:1px solid var(--line-soft);border-radius:22px;padding:clamp(20px,3.4vw,36px)}
+.lead > *{min-width:0}
+.lead h2{font-size:clamp(24px,3vw,32px);letter-spacing:-.045em;margin:10px 0}
+.lead p{color:var(--muted);font-size:14px}
+.lead ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.lead li{font-size:13.5px;color:var(--ink-2);padding-left:22px;position:relative}
+.lead li::before{content:"✓";position:absolute;left:0;color:var(--red-600);font-weight:800}
+.lead form{display:grid;gap:12px}
+.hooks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.hook{border:1px solid var(--line-soft);border-radius:16px;padding:18px;display:grid;gap:10px;align-content:space-between;background:var(--surface)}
+.hook .fmt{font-family:var(--font-mono);font-size:10.5px;color:var(--red-700)}
+.hook p{font-family:var(--font-display);font-weight:700;font-size:15px;color:var(--fg);line-height:1.35}
+.hook span{font-size:12px;color:var(--faint)}
+.values{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line-soft);border-radius:18px;overflow:hidden}
+.values > div{padding:20px;border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.values > div:nth-child(3n){border-right:0}
+.values > div:nth-last-child(-n+3){border-bottom:0}
+.values b{display:block;font-family:var(--font-display);font-size:15px;color:var(--fg);margin-bottom:4px}
+.values span{font-size:13px;color:var(--muted)}
+@media (max-width:1000px){.hooks{grid-template-columns:repeat(2,minmax(0,1fr))}.report-body{grid-template-columns:1fr 1fr}.report-body > div:nth-child(2){border-right:0}.report-body > div:nth-child(-n+2){border-bottom:1px solid var(--line-soft)}}
+@media (max-width:860px){.vs,.lead,.tgrid{grid-template-columns:1fr}.vs > div + div{border-left:0;border-top:1px solid var(--line-soft)}.values{grid-template-columns:1fr}.values > div{border-right:0!important;border-bottom:1px solid var(--line-soft)!important}.values > div:last-child{border-bottom:0!important}}
+@media (max-width:520px){.hooks{grid-template-columns:1fr}.tgrid{display:grid;grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:82%;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}.tcard{scroll-snap-align:start}}
+</style>
+<div class="app">
+<div class="preview-bar"><div class="wrap"><b>Preview</b><span>Preview only · payments and live research not active</span></div></div>
+<header class="topbar">
+  <div class="wrap topinner">
+    <div class="brand" data-go="home" role="link" tabindex="0">
+      <div class="mark">OR</div>
+      <div>Option Rangers<small>RESEARCH · EDUCATION</small></div>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav">
+      <button data-go="home" class="active">Home</button>
+      <button data-go="about">About</button>
+      <button data-go="plans">Plans &amp; fees</button>
+      <button data-go="track">Track record</button>
+      <button data-go="faq">FAQ</button>
+      <button data-go="contact">Contact</button>
+      <button data-go="legal" class="client">Risk disclosure</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- HOME -->
+<section class="view" data-view="home">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Options research &amp; education</div>
+      <h1>Trade se pehle, <span>research zaroori hai.</span></h1>
+      <p>Market analysis, trade ka logic aur risk, simple language mein. We explain market context and risk without hype. We do not promise profits.</p>
+      <div class="hero-actions">
+        <button class="btn" data-go="plans">Explore our plans →</button>
+        <button class="btn outline" data-go="legal" data-tab="risk">Read risk disclosure</button>
+      </div>
+      <div class="hero-note">No profit is guaranteed. Option buyers can lose the entire premium.</div>
+    </div>
+
+    <div class="payoff" aria-label="Illustrative long call payoff diagram">
+      <div class="payoff-top">
+        <div><strong>Buying a call option</strong><div class="sub">Buy 24,500 CE at ₹120 premium · per unit</div></div>
+        <span class="pill red">Risk first</span>
+      </div>
+      <svg viewBox="0 0 360 200" role="img" aria-label="Payoff at expiry: loss up to the full premium of 120 below 24,500, breakeven 24,620">
+        <line class="axis" x1="34" y1="14" x2="34" y2="174"/>
+        <line class="axis" x1="34" y1="174" x2="350" y2="174"/>
+        <polygon class="loss" points="34,118.3 34,160.1 139.3,160.1 202.5,118.3"/>
+        <polygon class="gain" points="202.5,118.3 350,21 350,118.3"/>
+        <line class="zero" x1="34" y1="118.3" x2="350" y2="118.3"/>
+        <polyline class="line" points="34,160.1 139.3,160.1 350,21"/>
+        <circle class="be" cx="202.5" cy="118.3" r="4"/>
+        <text x="29" y="24" text-anchor="end">+280</text>
+        <text x="29" y="121.3" text-anchor="end">0</text>
+        <text x="29" y="163.1" text-anchor="end">−120</text>
+        <text x="139.3" y="188" text-anchor="middle">24,500</text>
+        <text x="202.5" y="188" text-anchor="middle">24,620</text>
+        <text x="350" y="188" text-anchor="end">24,900</text>
+        <text x="60" y="152">Premium lost</text>
+      </svg>
+      <div class="stats">
+        <div class="stat r"><small>Max loss</small><b class="num">₹120</b></div>
+        <div class="stat"><small>Breakeven</small><b class="num">24,620</b></div>
+        <div class="stat"><small>Profit</small><b>Not guaranteed</b></div>
+      </div>
+      <div class="fine">Payoff at expiry. Before expiry, theta decay reduces the premium every day. Illustrative only; not a trading signal. Excludes costs and taxes.</div>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="shell-head">
+      <span class="kicker">Before an option buy</span>
+      <h2>Three things to check, every time</h2>
+    </div>
+    <div class="trio">
+      <div class="check"><span class="t">CHECK 1</span><h3>Direction &amp; momentum</h3><p>Is price actually moving in the direction you expect, or are you hoping it will?</p></div>
+      <div class="check"><span class="t">CHECK 2</span><h3>Time &amp; theta</h3><p>Options have an expiry. Time value erodes every day, even if price stays still.</p></div>
+      <div class="check"><span class="t">CHECK 3</span><h3>Strike &amp; risk</h3><p>Check strike distance, premium, liquidity, and the loss you can actually afford.</p></div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="guide-grid">
+      <div class="gcard do">
+        <div class="ghead"><div class="gsym">✓</div><div><div class="glabel">DO</div><h3>Trade with a plan</h3></div></div>
+        <ul>
+          <li><strong>Wait for momentum</strong> to support your view.</li>
+          <li><strong>Respect theta decay.</strong> Time works against the buyer.</li>
+          <li><strong>Know your risk</strong> before entry, not after.</li>
+          <li><strong>Check strike, expiry and liquidity.</strong></li>
+          <li><strong>Keep position size sensible.</strong></li>
+        </ul>
+      </div>
+      <div class="gcard dont">
+        <div class="ghead"><div class="gsym">×</div><div><div class="glabel">DON'T</div><h3>Common traps</h3></div></div>
+        <ul>
+          <li><strong>Buy far OTM</strong> just because it looks cheap.</li>
+          <li><strong>Average down blindly</strong> on a losing position.</li>
+          <li><strong>Increase lots out of greed</strong> after a win.</li>
+          <li><strong>Put your full capital</strong> into one expiry-day trade.</li>
+          <li><strong>Enter without a reason</strong> you can write down.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="shell">
+    <div class="shell-head">
+      <span class="kicker">Plans</span>
+      <h2>Proposed plans</h2>
+    </div>
+    <div class="plan-grid" id="planGridHome"></div>
+    <p class="plan-disc">Planned scope and pricing, subject to final written terms. No payment or live service is active. Options trading involves significant risk; no profit is guaranteed.</p>
+  </div>
+
+  <div class="shell">
+    <div class="shell-head">
+      <span class="kicker">Testimonials</span>
+      <h2>What our clients say</h2>
+      <p>Only verified client feedback, shared with written consent, will appear here. We will never publish invented reviews or profit screenshots.</p>
+    </div>
+    <div class="tgrid">
+      <figure class="tcard" style="margin:0"><blockquote><span class="placeholder">Verified client quote</span></blockquote><figcaption class="tperson"><div class="avatar">?</div><div><b><span class="placeholder">Client name</span></b><span>City · client since [month]</span></div></figcaption></figure>
+      <figure class="tcard" style="margin:0"><blockquote><span class="placeholder">Verified client quote</span></blockquote><figcaption class="tperson"><div class="avatar">?</div><div><b><span class="placeholder">Client name</span></b><span>City · client since [month]</span></div></figcaption></figure>
+      <figure class="tcard" style="margin:0"><blockquote><span class="placeholder">Verified client quote</span></blockquote><figcaption class="tperson"><div class="avatar">?</div><div><b><span class="placeholder">Client name</span></b><span>City · client since [month]</span></div></figcaption></figure>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="lead">
+      <div>
+        <span class="kicker">Free download</span>
+        <h2>Option Buyer Risk Checklist</h2>
+        <p>A one-page PDF to use before every trade.</p>
+        <ul>
+          <li>10 checks before buying an option</li>
+          <li>Position sizing template</li>
+          <li>Common mistakes to avoid</li>
+        </ul>
+      </div>
+      <form id="leadForm" novalidate>
+        <div class="field"><label for="leadName">Name</label><input id="leadName" autocomplete="name"></div>
+        <div class="field"><label for="leadEmail">Email</label><input id="leadEmail" type="email" autocomplete="email"></div>
+        <div class="msg" id="leadMsg" hidden></div>
+        <button class="btn block" type="submit">Get the free checklist</button>
+        <p style="font-size:11.5px;color:var(--faint)">No spam. Educational content only, not investment advice.</p>
+      </form>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="shell-head"><span class="kicker">Quick answers</span></div>
+    <div class="faq" id="quickFaq"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="view" data-view="about" hidden>
+  <div class="page-head">
+    <span class="kicker">About</span>
+    <h1>Clarity over certainty.</h1>
+    <p>Option Rangers is being developed as a market research and education platform. Our aim is to explain market information in plain language and be open about uncertainty. We do not promise profits.</p>
+  </div>
+  <div class="two">
+    <div class="panel">
+      <h3>Our principles</h3>
+      <ul class="features">
+        <li>Explain assumptions and uncertainty.</li>
+        <li>Communicate risk in plain language.</li>
+        <li>Keep pricing and terms visible.</li>
+        <li>Never pressure clients to add capital.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="row" style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h3>Credentials and status</h3><span class="pill amber">Verification pending</span></div>
+      <p style="font-size:13.5px;color:var(--muted)">We will publish verified legal-entity, registration and professional details here once confirmed. No registration number, address or credential is shown until it is verified.</p>
+      <div class="kv">
+        <div><span>Legal entity</span><span class="placeholder">pending</span></div>
+        <div><span>Registration</span><span class="placeholder">pending</span></div>
+        <div><span>Principal officer</span><span class="placeholder">pending</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="view" data-view="plans" hidden>
+  <div class="page-head">
+    <span class="kicker">Plans &amp; fees</span>
+    <h1>Know the full price before you decide.</h1>
+    <p>Choose only if the service fits your needs and the fee is affordable without trading profits.</p>
+  </div>
+  <div class="plan-grid" id="planGridFull"></div>
+  <div class="two">
+    <div class="panel">
+      <h3>Before you subscribe, confirm</h3>
+      <ul class="list-checks">
+        <li>Exact service scope and delivery frequency</li>
+        <li>Written terms, cancellation and refund policy, and grievance channel</li>
+        <li>Applicable registration details and risk disclosures</li>
+        <li>Whether the fee is affordable without relying on trading profits</li>
+      </ul>
+    </div>
+    <div class="notice"><strong>Planned prices only</strong>Payment is not enabled. Paid actionable research will not be offered until the correct SEBI registration, disclosures, agreements, fee rules and other compliance requirements are verified.</div>
+  </div>
+</section>
+
+<!-- TRACK RECORD -->
+<section class="view" data-view="track" hidden>
+  <div class="page-head">
+    <span class="kicker">Track record</span>
+    <h1>See the facts, not just the claims.</h1>
+  </div>
+  <div class="notice amber"><strong>No performance figures yet</strong>Option Rangers has not published a verified, independently reviewable performance record. No win rate, return, accuracy percentage, drawdown or client-profit figure is shown. Sample educational posts are not trading signals.</div>
+  <div class="panel">
+    <h3>What a proper record should explain</h3>
+    <ul class="list-checks">
+      <li>Defined start and end dates, and the complete list of every idea published</li>
+      <li>Entry, exit, invalidation and timestamp method</li>
+      <li>Whether results are hypothetical, modelled or actual</li>
+      <li>Brokerage, taxes, slippage and other costs</li>
+      <li>Winning and losing outcomes, drawdown and sample size</li>
+      <li>Applicable regulatory disclosures and review process</li>
+    </ul>
+    <p style="font-size:13px;color:var(--muted)">Past performance does not guarantee future results.</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="view" data-view="faq" hidden>
+  <div class="page-head"><span class="kicker">FAQ</span><h1>Common questions</h1></div>
+  <div class="faq" id="faqList"></div>
+</section>
+
+<!-- CONTACT -->
+<section class="view" data-view="contact" hidden>
+  <div class="page-head">
+    <span class="kicker">Contact</span>
+    <h1>Questions? Talk to us before you buy.</h1>
+  </div>
+  <div class="two">
+    <form class="panel" id="contactForm" novalidate>
+      <div class="field"><label for="cName">Your name</label><input id="cName" autocomplete="name"></div>
+      <div class="field"><label for="cEmail">Email</label><input id="cEmail" type="email" autocomplete="email"></div>
+      <div class="field"><label for="cTopic">Topic</label>
+        <select id="cTopic"><option>General enquiry</option><option>Subscription question</option><option>Privacy request</option><option>Service complaint</option><option>Grievance escalation</option></select></div>
+      <div class="field"><label for="cMsg">Message</label><textarea id="cMsg"></textarea></div>
+      <div class="msg" id="contactMsg" hidden></div>
+      <button class="btn block" type="submit">Send message</button>
+    </form>
+    <div class="panel">
+      <h3>Support details</h3>
+      <div class="kv">
+        <div><span>Legal entity</span><span class="placeholder">verified name</span></div>
+        <div><span>Support email</span><span class="placeholder">monitored email</span></div>
+        <div><span>Phone</span><span class="placeholder">verified phone</span></div>
+        <div><span>Address</span><span class="placeholder">verified address</span></div>
+        <div><span>Grievance officer</span><span class="placeholder">name &amp; contact</span></div>
+        <div><span>Support hours</span><span class="placeholder">hours &amp; timeline</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEGAL -->
+<section class="view" data-view="legal" hidden>
+  <div class="page-head"><span class="kicker">Legal</span><h1>Disclosures and policies</h1></div>
+  <div class="notice amber"><strong>Draft</strong>These policies are drafts awaiting review by a qualified professional. Bracketed fields will be replaced with verified details before launch.</div>
+  <div class="panel">
+    <div class="legal-tabs" id="legalTabs">
+      <button class="active" data-tab="risk">Risk disclosure</button>
+      <button data-tab="terms">Terms &amp; conditions</button>
+      <button data-tab="refund">Refund &amp; cancellation</button>
+      <button data-tab="privacy">Privacy policy</button>
+    </div>
+    <div class="prose" id="legalBody"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div style="display:grid;gap:10px">
+      <div class="brand" data-go="home" role="link" tabindex="0"><div class="mark">OR</div><div>Option Rangers<small>RESEARCH · EDUCATION</small></div></div>
+      <p>Risk-first options market research and education. No profit guarantees. Trade se pehle, research zaroori hai.</p>
+      <p>Registration: <span class="pill amber">Verification pending</span></p>
+    </div>
+    <div><h4>Explore</h4><ul>
+      <li><button data-go="about">About</button></li>
+      <li><button data-go="plans">Plans &amp; fees</button></li>
+      <li><button data-go="track">Track record</button></li>
+      <li><button data-go="faq">FAQ</button></li>
+      <li><button data-go="contact">Contact</button></li>
+    </ul></div>
+    <div><h4>Legal</h4><ul>
+      <li><button data-go="legal" data-tab="risk">Risk disclosure</button></li>
+      <li><button data-go="legal" data-tab="terms">Terms &amp; conditions</button></li>
+      <li><button data-go="legal" data-tab="refund">Refund &amp; cancellation</button></li>
+      <li><button data-go="legal" data-tab="privacy">Privacy policy</button></li>
+    </ul></div>
+  </div>
+  <div class="wrap risk">
+    <span>Options trading involves risk. You may lose the entire premium. No profit is guaranteed. This website is educational and is not investment advice.</span>
+    <span>Investments in securities market are subject to market risks. Read all the related documents carefully before investing.</span>
+    <span>© 2026 Option Rangers.</span>
+  </div>
+</footer>
+</div>
+
+<script>
+const LEARN = [
+  {cls:'',glyph:'C/P',title:'Option basics',text:'Strikes, premium, expiry and implied volatility. How a contract gains or loses value.',terms:['Strike','Premium','Expiry','IV']},
+  {cls:'l-violet',glyph:'%',title:'Risk management',text:'Position sizing, stop-loss and maximum loss. How much one trade should risk.',terms:['Sizing','Stop-loss','Max loss']},
+  {cls:'l-teal',glyph:'Θ',title:'Market context',text:'Volatility, trends and uncertainty. Context explains the market; it does not predict it.',terms:['Volatility','Trend','Theta']},
+  {cls:'l-amber',glyph:'Ψ',title:'Trader psychology',text:'FOMO, revenge trading and discipline. Why loss-recovery trades blow up accounts.',terms:['FOMO','Discipline']}
+];
+const PLANS = [
+  {name:'Weekly Research',desc:'Try the research process for one week.',price:'3,999',per:'/ 7 days',day:'571',feat:['Daily market context note','Risk notes with invalidation level','Option basics learning material','Email support']},
+  {name:'Monthly Research',desc:'For traders who want a full month of context and risk notes.',price:'14,999',per:'/ 30 days',day:'500',featured:true,feat:['Everything in Weekly','Weekly market review','Live Q&amp;A session every week','Priority email support']}
+];
+const QUICK = [
+  ['Are profits guaranteed?','No. Markets can move against any view.'],
+  ['Are these plans active?','No. They are proposed only, and payment is not enabled.'],
+  ['What should I verify?','Service scope, registration, written terms and the refund policy.']
+];
+const FAQ = [
+  ['Can you guarantee profit?','No. Markets can move against any view. We will not promise a return, a win rate or recovery of losses.'],
+  ['What are the prices?','Planned prices are ₹3,999 for 7 days and ₹14,999 for 30 days. Payment is not enabled in this preview.'],
+  ['Can I see your track record?','We have not published a verified performance record in this preview. We will not use invented figures.'],
+  ['Is the service live now?','No. This website is a front-end preview. Login, payments and live research are not connected.'],
+  ['Do I need more trading capital?','We will never ask you to borrow money or increase trading capital to pay for a subscription.'],
+  ['Are you registered with SEBI?','Verified registration details have not been added to this preview. Do not treat this website as proof of authorisation.'],
+  ['Will I receive live entries and exits?','No live actionable recommendations are available in this preview.'],
+  ['Are sample reports actual calls?','No. Any sample report shown is a layout example only.']
+];
+const LEGAL = {
+  risk:`<h3>Risk disclosure</h3><p>Trading in options involves substantial risk and is not suitable for everyone.</p><ul><li>An option buyer can lose the entire premium paid.</li><li>Option sellers can face losses larger than the premium received.</li><li>Time decay, volatility changes, gaps and low liquidity can cause losses even when your direction is correct.</li><li>No profit, return or win rate is guaranteed.</li><li>Never trade with borrowed money or funds you need for essential expenses.</li></ul><p>Content on this website is educational. Examples are illustrative and exclude brokerage, taxes and slippage.</p>`,
+  terms:`<h3>Terms &amp; conditions</h3><p>These terms govern use of the Option Rangers website operated by <span class="placeholder">legal entity</span>.</p><ul><li>Website content is for education and general information only and is not personalised investment advice.</li><li>You are solely responsible for your trading decisions.</li><li>Paid services, if offered, will be governed by a separate written agreement.</li><li>Governing law and jurisdiction: <span class="placeholder">confirm</span>.</li></ul>`,
+  refund:`<h3>Refund &amp; cancellation</h3><p>No payments are being accepted in this preview.</p><p>When paid plans launch, this page will state the cancellation window, how refunds are calculated for unused periods, the processing timeline and how to raise a request: <span class="placeholder">insert verified policy</span>.</p>`,
+  privacy:`<h3>Privacy policy</h3><p>We collect only what you submit through forms, such as your name, email and message, to respond to you.</p><ul><li>We never ask for broker, demat or bank login details, OTPs or passwords.</li><li>We do not sell your data.</li><li>Data retention, storage location and processors: <span class="placeholder">confirm actual practices</span>.</li><li>Privacy requests: use the Contact page and choose "Privacy request".</li></ul>`
+};
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+const plans = PLANS.map(p=>`<article class="plan ${p.featured?'featured':''}">${p.featured?'<span class="plan-badge">Lower cost per day</span>':''}<div class="plan-top"><h3>${p.name}</h3><span class="pill amber">Proposed</span></div><p class="desc">${p.desc}</p><div class="price-row"><span class="price">₹${p.price}</span><span class="price-per">${p.per}</span></div><div class="price-sub">About ₹${p.day} per day · incl. GST [confirm]</div><hr><ul class="features">${p.feat.map(f=>`<li>${f}</li>`).join('')}</ul><button class="btn ${p.featured?'':'outline'}" type="button" data-go="plans">View plan details</button><div class="plan-note">Payment not active yet</div></article>`).join('');
+$('#planGridHome').innerHTML = plans; $('#planGridFull').innerHTML = plans;
+const qa = l => l.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join('');
+$('#quickFaq').innerHTML = qa(QUICK); $('#faqList').innerHTML = qa(FAQ);
+
+function setLegal(tab){
+  if(!LEGAL[tab]) tab='risk';
+  $('#legalBody').innerHTML = LEGAL[tab];
+  $$('#legalTabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+}
+setLegal('risk');
+$('#legalTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setLegal(b.dataset.tab)});
+
+const VIEWS = ['home','about','plans','track','faq','contact','legal'];
+function go(v,push=true){
+  if(!VIEWS.includes(v)) v='home';
+  $$('[data-view]').forEach(s=>s.hidden = s.dataset.view!==v);
+  $$('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===v));
+  $('#nav').classList.remove('open'); $('#menuToggle').setAttribute('aria-expanded','false');
+  if(push){ try{ history.replaceState(null,'','#'+v) }catch(e){} }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.addEventListener('click',e=>{
+  const t = e.target.closest('[data-go]'); if(!t) return;
+  go(t.dataset.go); if(t.dataset.tab) setLegal(t.dataset.tab);
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Enter' && e.target.matches('.brand')) go('home') });
+$('#menuToggle').addEventListener('click',()=>{
+  const open = $('#nav').classList.toggle('open');
+  $('#menuToggle').setAttribute('aria-expanded',String(open));
+});
+go((location.hash||'').slice(1)||'home',false);
+
+$('#contactForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const msg = $('#contactMsg'); msg.hidden = false;
+  if(!$('#cName').value.trim()) msg.textContent = 'Enter your name.';
+  else if(!/^\S+@\S+\.\S+$/.test($('#cEmail').value.trim())) msg.textContent = 'Enter a valid email address.';
+  else if($('#cMsg').value.trim().length < 10) msg.textContent = 'Write a message of at least 10 characters.';
+  else msg.textContent = 'This form is not connected yet, so your message was not sent. Use the verified support email once it is published.';
+});
+$('#leadForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const msg=$('#leadMsg'); msg.hidden=false;
+  if(!$('#leadName').value.trim()) msg.textContent='Enter your name.';
+  else if(!/^\S+@\S+\.\S+$/.test($('#leadEmail').value.trim())) msg.textContent='Enter a valid email address.';
+  else msg.textContent='Sign-up is not connected yet, so nothing was sent. The checklist will be available once email delivery is set up.';
+});
+</script>
